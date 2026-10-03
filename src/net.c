@@ -114,9 +114,10 @@ static int net_tx_frame(netstack_t *s, const uint8_t *ip_pkt, size_t ip_len)
         arp->plen   = 4;
         arp->opcode = htons(ARP_OP_REQUEST);
         memcpy(arp->sha, s->mac, 6);
-        arp->spa = s->laddr;
+        /* spa and tpa are byte arrays on the wire, not scalars. */
+        wr32_be(arp->spa, s->laddr);
         memset(arp->tha, 0, 6);
-        arp->tpa = iph->dst_ip;
+        wr32_be(arp->tpa, iph->dst_ip);
 
         s->arp_requests++;
         log_debug("net: no ARP entry for %s, broadcasting a request",
@@ -252,9 +253,9 @@ void arp_input(netstack_t *s, const uint8_t *frame, size_t len)
         rep->plen    = 4;
         rep->opcode  = htons(ARP_OP_REPLY);
         memcpy(rep->sha, s->mac, 6);
-        rep->spa = s->laddr;
+        wr32_be(rep->spa, s->laddr);
         memcpy(rep->tha, arp->sha, 6);
-        rep->tpa = spa;
+        wr32_be(rep->tpa, spa);
 
         log_debug("arp: replying to %s (%s)",
                   ip_str(spa, ipb, sizeof ipb),

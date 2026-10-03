@@ -21,8 +21,9 @@ bool eth_is_ours(const uint8_t dst[6], const uint8_t our_mac[6])
     return memcmp(dst, our_mac, 6) == 0;
 }
 
-void eth_fmt_mac(const uint8_t mac[6], char *buf, size_t buflen)
+const char *eth_fmt_mac(const uint8_t mac[6], char *buf, size_t buflen)
 {
     snprintf(buf, buflen, "%02x:%02x:%02x:%02x:%02x:%02x",
              mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+    return buf;
 }
