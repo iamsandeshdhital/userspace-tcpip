@@ -168,6 +168,8 @@ struct tcp_pcb {
     struct tcp_pcb *accept_tail;
 };
 
+typedef struct tcp_pcb tcp_pcb_t;
+
 /* ---------------- application API (all non-blocking) ---------------- */
 
 /* Create an unbound control block.  `lport` of 0 means "any". */
