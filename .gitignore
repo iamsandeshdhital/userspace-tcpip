@@ -1,0 +1,25 @@
+# Build output
+*.o
+*.d
+usstack
+usstack-tests
+*.a
+*.so
+
+# Sanitizer and coverage artefacts
+*.gcda
+*.gcno
+*.gcov
+core
+core.*
+
+# Editor and OS noise
+*.swp
+*~
+.vscode/
+.idea/
+.cache/
+compile_commands.json
+
+# Nothing in this project should ever be committed by accident
+*.log

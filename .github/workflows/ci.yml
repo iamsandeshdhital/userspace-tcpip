@@ -1,0 +1,53 @@
+name: build and test
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    # The test suite needs no privileges and no network device, so it runs on
+    # any Linux runner.  The TUN device itself is only exercised by hand --
+    # see docs/LAB.md.
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential
+
+      - name: build
+        run: make
+
+      - name: test
+        run: make test
+
+      - name: test under sanitizers
+        # AddressSanitizer and UndefinedBehaviorSanitizer catch the class of
+        # bug that hand-written buffer and offset arithmetic invites.
+        run: make asan
+
+  strict-warnings:
+    # Reported as a separate job so that a formatting warning cannot hide a
+    # real build failure.  Once the tree is clean, merge this into `test` by
+    # building with `make test WERROR=1`.
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential clang
+
+      - name: build with clang and stricter warnings
+        continue-on-error: true
+        run: |
+          make clean
+          make CC=clang OPT="-O2 -g -Wconversion -Wsign-conversion" test

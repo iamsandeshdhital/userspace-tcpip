@@ -1,0 +1,22 @@
+# Normalise line endings to LF everywhere.
+#
+# This project only builds on Linux, and a CRLF in a Makefile is enough to
+# break the build there ("missing separator").  Git's global core.autocrlf on
+# Windows would otherwise rewrite the Makefile on checkout.
+* text=auto eol=lf
+
+# Sources, build files and docs: LF, always.
+*.c    text eol=lf
+*.h    text eol=lf
+*.md   text eol=lf
+*.yml  text eol=lf
+*.sh   text eol=lf text eol=lf
+Makefile text eol=lf
+.gitignore text eol=lf
+.gitattributes text eol=lf
+LICENSE text eol=lf
+
+# Nothing here is binary, but be explicit rather than let Git guess.
+*.png  binary
+*.jpg  binary
+*.o    binary
