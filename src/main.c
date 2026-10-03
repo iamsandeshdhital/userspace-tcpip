@@ -36,6 +36,7 @@ typedef struct {
     bool        ping_active;
     uint32_t    ping_deadline_ms;
     uint32_t    ping_next_send_ms;
+    uint32_t    ping_lost;      /* requests still outstanding when the run ends */
     int         ping_count;
 
     tcp_pcb_t  *listener;
